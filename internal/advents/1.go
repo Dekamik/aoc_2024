@@ -21,7 +21,6 @@ func (d day1part1) Execute() {
 		panic(err)
 	}
 
-
 	lhList := []int64{}
 	rhList := []int64{}
 
@@ -31,8 +30,8 @@ func (d day1part1) Execute() {
 		matches := re.FindStringSubmatch(line)
 		m1 := matches[1]
 		m2 := matches[2]
-		
-		if (m1 == "" || m2 == "") {
+
+		if m1 == "" || m2 == "" {
 			break
 		}
 
