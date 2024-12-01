@@ -20,12 +20,12 @@ func (d day1part1) Execute() {
 	if err != nil {
 		panic(err)
 	}
+	lines := strings.Split(string(data), "\n")
 
 	lhList := []int64{}
 	rhList := []int64{}
-
 	re := regexp.MustCompile(`^(\d*)[[:blank:]]*(\d*)$`)
-	lines := strings.Split(string(data), "\n")
+
 	for _, line := range lines {
 		matches := re.FindStringSubmatch(line)
 		m1 := matches[1]
