@@ -33,7 +33,7 @@ func getLists() ([]int64, []int64) {
 		m1 := matches[1]
 		m2 := matches[2]
 
-		if m1 == "" || m2 == "" {
+		if m1 == "" && m2 == "" {
 			break
 		}
 
