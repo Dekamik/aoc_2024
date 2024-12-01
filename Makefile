@@ -9,6 +9,9 @@ build:
 test:
 	go test ./...
 
+run:
+	bin/aoc
+
 clean:
 	go clean
 	rm bin/aoc

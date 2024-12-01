@@ -1,5 +1,6 @@
 package internal
 
-type Command interface {
-	Execute()
+type Challenge interface {
+	ExecutePart1()
+	ExecutePart2()
 }

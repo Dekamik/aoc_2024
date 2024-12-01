@@ -11,13 +11,10 @@ import (
 	"strings"
 )
 
-type day1part1 struct {
+type day1 struct {
 }
 
-type day1part2 struct {
-}
-
-func getLists() ([]int64, []int64) {
+func (d day1) getLists() ([]int64, []int64) {
 	data, err := os.ReadFile("inputs/1-1.txt")
 	if err != nil {
 		panic(err)
@@ -55,8 +52,8 @@ func getLists() ([]int64, []int64) {
 }
 
 // Execute implements internal.Command.
-func (d day1part1) Execute() {
-	lhList, rhList := getLists()
+func (d day1) ExecutePart1() {
+	lhList, rhList := d.getLists()
 
 	sort.Slice(lhList, func(i, j int) bool {
 		return lhList[i] < lhList[j]
@@ -76,8 +73,8 @@ func (d day1part1) Execute() {
 }
 
 // Execute implements internal.Command.
-func (d day1part2) Execute() {
-	lhList, rhList := getLists()
+func (d day1) ExecutePart2() {
+	lhList, rhList := d.getLists()
 
 	var similarityScore int64 = 0
 
@@ -96,13 +93,8 @@ func (d day1part2) Execute() {
 	fmt.Println(similarityScore)
 }
 
-var _ internal.Command = day1part1{}
-var _ internal.Command = day1part2{}
+var _ internal.Challenge = day1{}
 
-func NewDay1Part1() internal.Command {
-	return day1part1{}
-}
-
-func NewDay1Part2() internal.Command {
-	return day1part2{}
+func NewDay1() internal.Challenge {
+	return day1{}
 }
