@@ -14,8 +14,10 @@ import (
 type day1part1 struct {
 }
 
-// Execute implements internal.Command.
-func (d day1part1) Execute() {
+type day1part2 struct {
+}
+
+func getLists() ([]int64, []int64) {
 	data, err := os.ReadFile("inputs/1-1.txt")
 	if err != nil {
 		panic(err)
@@ -49,6 +51,13 @@ func (d day1part1) Execute() {
 		rhList = append(rhList, rh)
 	}
 
+	return lhList, rhList
+}
+
+// Execute implements internal.Command.
+func (d day1part1) Execute() {
+	lhList, rhList := getLists()
+
 	sort.Slice(lhList, func(i, j int) bool {
 		return lhList[i] < lhList[j]
 	})
@@ -66,8 +75,34 @@ func (d day1part1) Execute() {
 	fmt.Println(totalDistance)
 }
 
+// Execute implements internal.Command.
+func (d day1part2) Execute() {
+	lhList, rhList := getLists()
+
+	var similarityScore int64 = 0
+
+	for _, lhNum := range lhList {
+		var occurrences int64 = 0
+
+		for _, rhNum := range rhList {
+			if lhNum == rhNum {
+				occurrences++
+			}
+		}
+
+		similarityScore += lhNum * occurrences
+	}
+
+	fmt.Println(similarityScore)
+}
+
 var _ internal.Command = day1part1{}
+var _ internal.Command = day1part2{}
 
 func NewDay1Part1() internal.Command {
 	return day1part1{}
+}
+
+func NewDay1Part2() internal.Command {
+	return day1part2{}
 }
