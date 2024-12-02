@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	command := advents.NewDay1()
+	command := advents.NewDay2()
 	command.ExecutePart1()
 	command.ExecutePart2()
 }

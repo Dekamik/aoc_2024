@@ -2,24 +2,22 @@ package advents
 
 import (
 	"dekamik/aoc_2024/internal/command"
+	"dekamik/aoc_2024/internal/io"
 	"fmt"
 	"math"
-	"os"
 	"regexp"
 	"sort"
 	"strconv"
-	"strings"
 )
 
 type day1 struct {
 }
 
 func (d day1) getLists() ([]int64, []int64) {
-	data, err := os.ReadFile("inputs/1-1.txt")
-	if err != nil {
-		panic(err)
-	}
-	lines := strings.Split(string(data), "\n")
+    lines, err := io.ReadLines("inputs/1-1.txt")
+    if err != nil {
+        panic(err)
+    }
 
 	lhList := []int64{}
 	rhList := []int64{}
