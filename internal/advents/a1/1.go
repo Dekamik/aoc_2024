@@ -14,7 +14,7 @@ type challenge struct {
 }
 
 func (d challenge) getLists() ([]int64, []int64) {
-    lines, err := io.ReadLines("inputs/1-1.txt")
+    lines, err := io.ReadLines("internal/advents/a1/input.txt")
     if err != nil {
         panic(err)
     }

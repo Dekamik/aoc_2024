@@ -21,7 +21,7 @@ type challenge struct {
 
 // ExecutePart1 implements internal.Challenge.
 func (d challenge) ExecutePart1() {
-    reports, err := io.ReadLines("inputs/2-1.txt")
+    reports, err := io.ReadLines("internal/advents/a2/input.txt")
     if err != nil {
         panic(err)
     }

@@ -1,7 +1,5 @@
 package a2
 
-import "testing"
-
 type day2test struct {
 	when string
 	row  string
@@ -12,8 +10,8 @@ var tests = []day2test {
 
 }
 
-func TestDay2(t *testing.T) {
-    for _, test := range tests {
-        
-    }
-}
+//func TestDay2(t *testing.T) {
+//    for _, test := range tests {
+//        
+//    }
+//}
