@@ -45,7 +45,7 @@ func (d day2) ExecutePart1() {
         }
 
         var expectedTrend int = Unknown
-        var isReportSafe bool = true
+        var unsafeLevels int = 0
 
         for i, level := range levels {
             if i == 0 {
@@ -56,14 +56,19 @@ func (d day2) ExecutePart1() {
             b := level
             absDiff := int(math.Abs(float64(a - b)))
 
-            if absDiff > 3 {
-                slog.Debug("Unsafe: Increase higher than threshold")
-                isReportSafe = false
-                break
-            } else if absDiff < 1 {
-                slog.Debug("Unsafe: Increase lower than threshold")
-                isReportSafe = false
-                break
+            if absDiff > 3 || absDiff < 1 {
+                slog.Debug("Unsafe: Difference higher than threshold")
+                unsafeLevels++
+
+                if i != len(levels)-1 {
+                    c := levels[i+1]
+                    newAbsDiff := int(math.Abs(float64(a - c)))
+
+                    if newAbsDiff > 3 || newAbsDiff < 1 {
+                        slog.Debug("Unsafe: Difference higher than threshold despite dampening")
+                        unsafeLevels++
+                    }
+                }
             }
 
             if i == 1 {
@@ -74,18 +79,16 @@ func (d day2) ExecutePart1() {
                 }
             } else {
                 if expectedTrend == Increasing && a > b {
-                    slog.Debug("Unsafe: Fluctiation detected")
-                    isReportSafe = false
-                    break
+                    slog.Debug("Unsafe: Fluctuation detected")
+                    unsafeLevels++
                 } else if expectedTrend == Decreasing && a < b {
-                    slog.Debug("Unsafe: Fluctiation detected")
-                    isReportSafe = false
-                    break
+                    slog.Debug("Unsafe: Fluctuation detected")
+                    unsafeLevels++
                 }
             }
         }
 
-        if isReportSafe {
+        if unsafeLevels <= 1 {
             safeReports++
         }
     }
