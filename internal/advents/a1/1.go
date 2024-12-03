@@ -1,4 +1,4 @@
-package advents
+package a1
 
 import (
 	"dekamik/aoc_2024/internal/command"
@@ -10,10 +10,10 @@ import (
 	"strconv"
 )
 
-type day1 struct {
+type challenge struct {
 }
 
-func (d day1) getLists() ([]int64, []int64) {
+func (d challenge) getLists() ([]int64, []int64) {
     lines, err := io.ReadLines("inputs/1-1.txt")
     if err != nil {
         panic(err)
@@ -50,7 +50,7 @@ func (d day1) getLists() ([]int64, []int64) {
 }
 
 // Execute implements internal.Command.
-func (d day1) ExecutePart1() {
+func (d challenge) ExecutePart1() {
 	lhList, rhList := d.getLists()
 
 	sort.Slice(lhList, func(i, j int) bool {
@@ -71,7 +71,7 @@ func (d day1) ExecutePart1() {
 }
 
 // Execute implements internal.Command.
-func (d day1) ExecutePart2() {
+func (d challenge) ExecutePart2() {
 	lhList, rhList := d.getLists()
 
 	var similarityScore int64 = 0
@@ -91,8 +91,8 @@ func (d day1) ExecutePart2() {
 	fmt.Println(similarityScore)
 }
 
-var _ internal.Challenge = day1{}
+var _ internal.Challenge = challenge{}
 
-func NewDay1() internal.Challenge {
-	return day1{}
+func New() internal.Challenge {
+	return challenge{}
 }

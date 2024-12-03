@@ -1,4 +1,4 @@
-package advents
+package a2
 
 import (
 	internal "dekamik/aoc_2024/internal/command"
@@ -16,11 +16,11 @@ const (
     Decreasing
 )
 
-type day2 struct {
+type challenge struct {
 }
 
 // ExecutePart1 implements internal.Challenge.
-func (d day2) ExecutePart1() {
+func (d challenge) ExecutePart1() {
     reports, err := io.ReadLines("inputs/2-1.txt")
     if err != nil {
         panic(err)
@@ -97,12 +97,12 @@ func (d day2) ExecutePart1() {
 }
 
 // ExecutePart2 implements internal.Challenge.
-func (d day2) ExecutePart2() {
+func (d challenge) ExecutePart2() {
     fmt.Println("unimplemented")
 }
 
-var _ internal.Challenge = day2{}
+var _ internal.Challenge = challenge{}
 
-func NewDay2() internal.Challenge {
-	return day2{}
+func New() internal.Challenge {
+	return challenge{}
 }

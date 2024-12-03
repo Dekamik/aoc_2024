@@ -1,4 +1,4 @@
-package advents
+package a2
 
 import "testing"
 
