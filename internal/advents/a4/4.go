@@ -87,7 +87,7 @@ func countWordsOnCoordinate(lines []string, word string, x int, y int) int {
 		maxDeltaX := x + (deltaX * len(word))
 		maxDeltaY := y + (deltaY * len(word))
 
-        // I don't know why the lower bounds has to be this, but it works anyway
+		// I don't know why the lower bounds has to be this, but it works anyway
 		if (maxDeltaX < -1 || maxDeltaX > xBounds) || (maxDeltaY < -1 || maxDeltaY > yBounds) {
 			continue
 		}
@@ -139,22 +139,22 @@ func (d day4) ExecutePart1() {
 }
 
 func isXMasOnCoordinate(lines []string, x int, y int) bool {
-	// X-MAS cannot exist when A on edge
+	// X-MAS is cut off when A is on the edge
 	if x == 0 || x == len(lines[y])-1 || y == 0 || y == len(lines)-1 {
 		return false
 	}
 
-    if len(lines[y+1]) == 0 {
-        return false
-    }
+	if len(lines[y+1]) == 0 {
+		return false
+	}
 
 	se := lines[y+1][x+1]
 	sw := lines[y+1][x-1]
 	nw := lines[y-1][x-1]
 	ne := lines[y-1][x+1]
 
-    match1 := (nw == 'M' && se == 'S') || (nw == 'S' && se == 'M')
-    match2 := (sw == 'M' && ne == 'S') || (sw == 'S' && ne == 'M')
+	match1 := (nw == 'M' && se == 'S') || (nw == 'S' && se == 'M')
+	match2 := (sw == 'M' && ne == 'S') || (sw == 'S' && ne == 'M')
 
 	return match1 && match2
 }
@@ -167,6 +167,7 @@ func countXMas(input string) int {
 		for x, letter := range line {
 			if letter == 'A' && isXMasOnCoordinate(lines, x, y) {
 				count++
+				slog.Debug("match found", "x", x, "y", y)
 			}
 		}
 	}
