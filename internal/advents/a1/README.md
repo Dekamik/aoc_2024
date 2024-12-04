@@ -37,7 +37,7 @@ can help The Historians reconcile their lists?
 
 For example:
 
-![Table of numbers](1-1.png)
+![Table of numbers](1-01.png)
 
 Maybe the lists are only off by a small amount! To find out, pair up the numbers
 and measure how far apart they are. Pair up the smallest number in the left list

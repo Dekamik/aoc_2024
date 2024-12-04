@@ -18,3 +18,17 @@ func TestParseInput(t *testing.T) {
 		t.Errorf("Actual %v not equal to expected %v", actual, expected)
 	}
 }
+
+func TestSum(t *testing.T) {
+    input := []mulArgs{
+		mulArgs{a: 2, b: 4},
+		mulArgs{a: 5, b: 5},
+		mulArgs{a: 11, b: 8},
+		mulArgs{a: 8, b: 5},
+	}
+    expected := 161
+    actual := sum(input)
+    if expected != actual {
+		t.Errorf("Actual %v not equal to expected %v", actual, expected)
+    }
+}
