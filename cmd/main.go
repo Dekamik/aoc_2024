@@ -1,11 +1,11 @@
 package main
 
 import (
-	"dekamik/aoc_2024/internal/advents/a4"
+	"dekamik/aoc_2024/internal/advents/a5"
 )
 
 func main() {
-	command := a4.New()
+	command := a5.New()
 	command.ExecutePart1()
 	command.ExecutePart2()
 }
