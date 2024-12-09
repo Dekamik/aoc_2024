@@ -5,6 +5,14 @@ import internal "dekamik/aoc_2024/internal/command"
 type day5 struct {
 }
 
+func getCorrectlyOrderedUpdates(input string) []int {
+    panic("unimplemented")
+}
+
+func sumMedian(input [][]int) int {
+    panic("unimplemented")
+}
+
 // ExecutePart1 implements internal.Challenge.
 func (d day5) ExecutePart1() {
 	panic("unimplemented")
