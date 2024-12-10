@@ -1,4 +1,4 @@
-package internal
+package structure
 
 type Challenge interface {
 	ExecutePart1()

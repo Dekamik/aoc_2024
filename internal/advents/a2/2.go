@@ -1,7 +1,7 @@
 package a2
 
 import (
-	internal "dekamik/aoc_2024/internal/command"
+	"dekamik/aoc_2024/internal/structure"
 	"dekamik/aoc_2024/internal/io"
 	"fmt"
 	"log/slog"
@@ -19,7 +19,7 @@ const (
 type challenge struct {
 }
 
-// ExecutePart1 implements internal.Challenge.
+// ExecutePart1 implements structure.Challenge.
 func (d challenge) ExecutePart1() {
     reports, err := io.ReadLines("internal/advents/a2/input.txt")
     if err != nil {
@@ -96,13 +96,13 @@ func (d challenge) ExecutePart1() {
     fmt.Println(safeReports)
 }
 
-// ExecutePart2 implements internal.Challenge.
+// ExecutePart2 implements structure.Challenge.
 func (d challenge) ExecutePart2() {
     fmt.Println("unimplemented")
 }
 
-var _ internal.Challenge = challenge{}
+var _ structure.Challenge = challenge{}
 
-func New() internal.Challenge {
+func New() structure.Challenge {
 	return challenge{}
 }
