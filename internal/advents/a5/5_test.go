@@ -47,7 +47,7 @@ func TestGetCorrectlyOrderedUpdates(t *testing.T) {
     }
 }
 
-func TestSumMedian(t *testing.T) {
+func TestSumMiddleNumber(t *testing.T) {
     input := [][]int{
 		{75, 47, 61, 53, 29},
 		{97, 61, 53, 29, 13},
@@ -55,7 +55,7 @@ func TestSumMedian(t *testing.T) {
 	}
 
     expected := 143
-    actual := sumMedian(input)
+    actual := sumMiddleNumber(input)
 
     if actual != expected {
         t.Errorf("Expected %v but got %v", expected, actual)

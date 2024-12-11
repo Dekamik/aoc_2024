@@ -1,15 +1,71 @@
 package a5
 
-import internal "dekamik/aoc_2024/internal/command"
+import (
+	internal "dekamik/aoc_2024/internal/command"
+	"strconv"
+	"strings"
+)
 
 type day5 struct {
+}
+
+type rule struct {
+	before int
+	after int
+}
+
+func (r rule) isValid(row []int) bool {
+	var isValid bool = true
+
+	for i, current := range row {
+		if current == r.before {
+			for j := 0; j < i; j++ {
+				if row[j] == r.after {
+					isValid = false
+					break
+				}
+			}
+		} else if current == r.after {
+			for j := i+1; j < len(row); j++ {
+				if row[j] == r.before {
+					isValid = false
+					break
+				}
+			}
+		}
+
+		if !isValid {
+			break
+		}
+	}
+
+	return isValid
+}
+
+func parseRule(s string) (*rule, error) {
+	raw := strings.Split(s, "|")
+
+	before, err := strconv.Atoi(raw[0])
+	if err != nil {
+		return nil, err
+	}
+
+	after, err := strconv.Atoi(raw[1])
+	if err != nil {
+		return nil, err
+	}
+
+	return &rule{
+		before: before,
+		after: after,
+	}, nil
 }
 
 func getCorrectlyOrderedUpdates(input string) []int {
     panic("unimplemented")
 }
 
-func sumMedian(input [][]int) int {
+func sumMiddleNumber(input [][]int) int {
     panic("unimplemented")
 }
 
