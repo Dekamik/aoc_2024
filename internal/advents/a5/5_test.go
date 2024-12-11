@@ -40,7 +40,10 @@ func TestGetCorrectlyOrderedUpdates(t *testing.T) {
 		{97, 61, 53, 29, 13},
 		{75, 29, 13},
 	}
-	actual := getCorrectlyOrderedUpdates(input)
+	actual, err := getCorrectlyOrderedUpdates(input)
+    if err != nil {
+        panic(err)
+    }
 
     if !reflect.DeepEqual(actual, expected) {
         t.Errorf("Expected %v but got %v", expected, actual)
