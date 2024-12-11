@@ -170,6 +170,7 @@ func traverse(patrolMap [][]tile, guard guard) (int, error) {
         if _, exists := distinctTiles[guard.pos.String()]; exists {
             currentCollisions++
 
+            // High number for accuracy
             if currentCollisions > 1000 {
                 return -1, infiniteLoopError
             }
