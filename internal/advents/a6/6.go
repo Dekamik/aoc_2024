@@ -61,6 +61,10 @@ type pos struct {
 	y   int
 }
 
+func (p pos) String() string {
+    return fmt.Sprintf("%d,%d", p.x, p.y)
+}
+
 type guard struct {
     pos pos
     dir direction
@@ -135,14 +139,22 @@ func parseMap(input string) ([][]tile, guard) {
 	return patrolMap, guard
 }
 
-func isWithinBounds(patrolMap [][]tile, position pos) bool {
+func getBounds(patrolMap [][]tile) (int, int, int, int) {
 	yBound := len(patrolMap)
 	xBound := len(patrolMap[yBound-1])
-	return position.x >= 0 && position.y >= 0 && position.x < xBound && position.y < yBound
+    return -1, -1, xBound, yBound
+}
+
+func isWithinBounds(patrolMap [][]tile, position pos) bool {
+    xMin, yMin, xMax, yMax := getBounds(patrolMap)
+	return position.x > xMin && position.y > yMin && position.x < xMax && position.y < yMax
 }
 
 func traverse(patrolMap [][]tile, guard guard) int {
-    var distinctTiles map[pos]struct{} = map[pos]struct{}{}
+    var distinctTiles map[string]struct{} = map[string]struct{}{}
+
+    xMin, yMin, xMax, yMax := getBounds(patrolMap)
+    slog.Debug("traversing map", "xMin", xMin, "yMin", yMin, "xMax", xMax, "yMax", yMax)
 
 	timeLimitSec := 5
 	abortTime := time.Now().Add(time.Second * time.Duration(timeLimitSec))
@@ -150,7 +162,7 @@ func traverse(patrolMap [][]tile, guard guard) int {
 		assert.Assert(time.Now().Before(abortTime), "traversal must take less than %v seconds to complete", timeLimitSec)
 
         slog.Debug("saving pos", "x", guard.pos.x, "y", guard.pos.y)
-        distinctTiles[guard.pos] = struct{}{}
+        distinctTiles[guard.pos.String()] = struct{}{}
 
 		deltaX, deltaY := guard.dir.Delta()
         nextPos := pos{
@@ -201,13 +213,15 @@ func (d day6) ExecutePart1() {
 		panic(err)
 	}
 
-	tiles := calculateDistinctTiles(input)
+    // Remove last newline
+    input = input[:len(input)-1]
+    tiles := calculateDistinctTiles(input)
 	fmt.Println(tiles)
 }
 
 // ExecutePart2 implements structure.Challenge.
 func (d day6) ExecutePart2() {
-	panic("unimplemented")
+	fmt.Println("unimplemented")
 }
 
 var _ structure.Challenge = day6{}
