@@ -2,7 +2,7 @@ package a4
 
 import (
 	"dekamik/aoc_2024/internal/assert"
-	internal "dekamik/aoc_2024/internal/command"
+	"dekamik/aoc_2024/internal/structure"
 	"dekamik/aoc_2024/internal/io"
 	"fmt"
 	"log/slog"
@@ -187,8 +187,8 @@ func (d day4) ExecutePart2() {
 	fmt.Println(count)
 }
 
-var _ internal.Challenge = day4{}
+var _ structure.Challenge = day4{}
 
-func New() internal.Challenge {
+func New() structure.Challenge {
 	return day4{}
 }

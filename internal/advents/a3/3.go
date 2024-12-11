@@ -1,7 +1,7 @@
 package a3
 
 import (
-	internal "dekamik/aoc_2024/internal/command"
+	"dekamik/aoc_2024/internal/structure"
 	"dekamik/aoc_2024/internal/io"
 	"fmt"
 	"regexp"
@@ -53,7 +53,7 @@ func sum(args []mulArgs) int {
 	return result
 }
 
-// ExecutePart1 implements internal.Challenge.
+// ExecutePart1 implements structure.Challenge.
 func (c challenge) ExecutePart1() {
 	str, err := io.ReadStr("internal/advents/a3/input.txt")
 	if err != nil {
@@ -142,7 +142,7 @@ func execute(program []token) int {
 	return result
 }
 
-// ExecutePart2 implements internal.Challenge.
+// ExecutePart2 implements structure.Challenge.
 func (c challenge) ExecutePart2() {
 	str, err := io.ReadStr("internal/advents/a3/input.txt")
 	if err != nil {
@@ -159,8 +159,8 @@ func (c challenge) ExecutePart2() {
 	fmt.Println(result)
 }
 
-var _ internal.Challenge = challenge{}
+var _ structure.Challenge = challenge{}
 
-func New() internal.Challenge {
+func New() structure.Challenge {
 	return challenge{}
 }

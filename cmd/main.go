@@ -1,11 +1,15 @@
 package main
 
 import (
-	"dekamik/aoc_2024/internal/advents/a5"
+	"dekamik/aoc_2024/internal/advents/a6"
+	"dekamik/aoc_2024/internal/logging"
+	"log/slog"
 )
 
 func main() {
-	command := a5.New()
+    logging.NewDefault(slog.LevelInfo)
+
+	command := a6.New()
 	command.ExecutePart1()
 	command.ExecutePart2()
 }

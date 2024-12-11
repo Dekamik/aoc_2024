@@ -1,7 +1,7 @@
 package a1
 
 import (
-	"dekamik/aoc_2024/internal/command"
+	"dekamik/aoc_2024/internal/structure"
 	"dekamik/aoc_2024/internal/io"
 	"fmt"
 	"math"
@@ -91,8 +91,8 @@ func (d challenge) ExecutePart2() {
 	fmt.Println(similarityScore)
 }
 
-var _ internal.Challenge = challenge{}
+var _ structure.Challenge = challenge{}
 
-func New() internal.Challenge {
+func New() structure.Challenge {
 	return challenge{}
 }

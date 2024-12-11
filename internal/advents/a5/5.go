@@ -1,7 +1,7 @@
 package a5
 
 import (
-	internal "dekamik/aoc_2024/internal/command"
+	"dekamik/aoc_2024/internal/structure"
 	"strconv"
 	"strings"
 )
@@ -69,18 +69,18 @@ func sumMiddleNumber(input [][]int) int {
     panic("unimplemented")
 }
 
-// ExecutePart1 implements internal.Challenge.
+// ExecutePart1 implements structure.Challenge.
 func (d day5) ExecutePart1() {
 	panic("unimplemented")
 }
 
-// ExecutePart2 implements internal.Challenge.
+// ExecutePart2 implements structure.Challenge.
 func (d day5) ExecutePart2() {
 	panic("unimplemented")
 }
 
-var _ internal.Challenge = day5{}
+var _ structure.Challenge = day5{}
 
-func New() internal.Challenge {
+func New() structure.Challenge {
     return day5{}
 }

@@ -1,7 +1,9 @@
 package assert
 
-func Assert(predicate bool, because string) {
+import "fmt"
+
+func Assert(predicate bool, becausef string, args ...any) {
     if !predicate {
-        panic(because)
+        panic(fmt.Sprintf(becausef, args...))
     }
 }
