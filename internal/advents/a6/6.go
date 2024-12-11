@@ -154,7 +154,7 @@ func isWithinBounds(patrolMap [][]tile, position pos) bool {
 }
 
 func traverse(patrolMap [][]tile, guard guard) (int, error) {
-    var saveCollisions int = 0
+    var currentCollisions int = 0
     var distinctTiles map[string]struct{} = map[string]struct{}{}
 
     xMin, yMin, xMax, yMax := getBounds(patrolMap)
@@ -168,13 +168,13 @@ func traverse(patrolMap [][]tile, guard guard) (int, error) {
         }
 
         if _, exists := distinctTiles[guard.pos.String()]; exists {
-            saveCollisions++
+            currentCollisions++
 
-            if saveCollisions > 20 {
+            if currentCollisions > 1000 {
                 return -1, infiniteLoopError
             }
         } else {
-            saveCollisions = 0
+            currentCollisions = 0
         }
 
         slog.Debug("saving pos", "x", guard.pos.x, "y", guard.pos.y)
