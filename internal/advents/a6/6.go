@@ -169,7 +169,8 @@ func traverse(patrolMap [][]tile, guard guard) (int, error) {
 
         // A better way to detect infinite loops is to count turns - if the last
         // 4 turns have the same coordinates, we are in an infinite loop.
-        // This works "okay" for our purposes
+        // This works "okay" for our purposes, although it's very bruteforce and
+        // unelegant.
         if _, exists := distinctTiles[guard.pos.String()]; exists {
             currentCollisions++
 
