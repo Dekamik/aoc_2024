@@ -1,15 +1,18 @@
 package a6
 
 import (
-	"dekamik/aoc_2024/internal/assert"
 	"dekamik/aoc_2024/internal/io"
 	"dekamik/aoc_2024/internal/structure"
+	"errors"
 	"fmt"
 	"log/slog"
 	"strconv"
 	"strings"
 	"time"
 )
+
+var infiniteLoopError error = errors.New("detected an infinite loop")
+var timeoutError error = errors.New("timeout")
 
 type day6 struct {
 }
@@ -150,7 +153,8 @@ func isWithinBounds(patrolMap [][]tile, position pos) bool {
 	return position.x > xMin && position.y > yMin && position.x < xMax && position.y < yMax
 }
 
-func traverse(patrolMap [][]tile, guard guard) int {
+func traverse(patrolMap [][]tile, guard guard) (int, error) {
+    var saveCollisions int = 0
     var distinctTiles map[string]struct{} = map[string]struct{}{}
 
     xMin, yMin, xMax, yMax := getBounds(patrolMap)
@@ -159,7 +163,19 @@ func traverse(patrolMap [][]tile, guard guard) int {
 	timeLimitSec := 5
 	abortTime := time.Now().Add(time.Second * time.Duration(timeLimitSec))
 	for {
-		assert.Assert(time.Now().Before(abortTime), "traversal must take less than %v seconds to complete", timeLimitSec)
+        if time.Now().After(abortTime) {
+            return -1, timeoutError
+        }
+
+        if _, exists := distinctTiles[guard.pos.String()]; exists {
+            saveCollisions++
+
+            if saveCollisions > 20 {
+                return -1, infiniteLoopError
+            }
+        } else {
+            saveCollisions = 0
+        }
 
         slog.Debug("saving pos", "x", guard.pos.x, "y", guard.pos.y)
         distinctTiles[guard.pos.String()] = struct{}{}
@@ -190,20 +206,54 @@ func traverse(patrolMap [][]tile, guard guard) int {
 			continue
 		}
 
-        // Calculate delta with new position
+        // Calculate delta with final direction
         deltaX, deltaY = guard.dir.Delta()
         guard.pos.x = guard.pos.x+deltaX
         guard.pos.y = guard.pos.y+deltaY
 	}
 
-	return len(distinctTiles)
+	return len(distinctTiles), nil
 }
 
-func calculateDistinctTiles(input string) int {
-	patrolMap, guardPosition := parseMap(input)
-	tiles := traverse(patrolMap, guardPosition)
+func calculateDistinctTiles(input string) (int, error) {
+	patrolMap, guard := parseMap(input)
+	tiles, err := traverse(patrolMap, guard)
+    if err != nil {
+        return -1, err
+    }
 
-	return tiles
+	return tiles, nil
+}
+
+func calculateInfiniteLoops(input string) (int, error) {
+    var possibleObstructions int = 0
+
+	patrolMap, guard := parseMap(input)
+    startPosition := guard.pos
+
+    for i, row := range patrolMap {
+        for j, tile := range row {
+            if tile.IsObstructed || (j == startPosition.x && i == startPosition.y) {
+                continue
+            }
+
+            patrolMap[i][j].IsObstructed = true
+
+            _, err := traverse(patrolMap, guard)
+            if err != nil {
+                if err == infiniteLoopError {
+                    slog.Info("found obstruction", "x", j, "y", i)
+                    possibleObstructions++
+                } else {
+                    return -1, err
+                }
+            }
+
+            patrolMap[i][j].IsObstructed = false
+        }
+    }
+
+    return possibleObstructions, nil
 }
 
 // ExecutePart1 implements structure.Challenge.
@@ -215,13 +265,29 @@ func (d day6) ExecutePart1() {
 
     // Remove last newline
     input = input[:len(input)-1]
-    tiles := calculateDistinctTiles(input)
+    tiles, err := calculateDistinctTiles(input)
+    if err != nil {
+        panic(err)
+    }
+
 	fmt.Println(tiles)
 }
 
 // ExecutePart2 implements structure.Challenge.
 func (d day6) ExecutePart2() {
-	fmt.Println("unimplemented")
+	input, err := io.ReadStr("internal/advents/a6/input.txt")
+	if err != nil {
+		panic(err)
+	}
+
+    // Remove last newline
+    input = input[:len(input)-1]
+    obstructions, err := calculateInfiniteLoops(input)
+    if err != nil {
+        panic(err)
+    }
+
+	fmt.Println(obstructions)
 }
 
 var _ structure.Challenge = day6{}
