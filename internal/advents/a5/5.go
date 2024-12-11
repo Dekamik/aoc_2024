@@ -1,12 +1,14 @@
 package a5
 
 import (
+	"dekamik/aoc_2024/internal/assert"
 	"dekamik/aoc_2024/internal/io"
 	"dekamik/aoc_2024/internal/structure"
 	"fmt"
 	"math"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type day5 struct {
@@ -152,6 +154,56 @@ func getCorrectlyOrderedUpdates(input string) ([][]int, error) {
     return validUpdates, nil
 }
 
+func getIncorrectlyOrderedUpdates(input string) ([][]int, error) {
+	invalidUpdates := [][]int{}
+
+    rules, queues, err := parseFile(input)
+    if err != nil {
+        return nil, err
+    }
+
+	for _, queue := range queues {
+		for _, rule := range rules {
+			if !rule.isValid(queue) {
+				invalidUpdates = append(invalidUpdates, queue)
+			}
+		}
+	}
+
+	return invalidUpdates, nil
+}
+
+func findInvalidRules(queue []int, rules []rule) []rule {
+	results := []rule{}
+
+	for _, rule := range rules {
+		if rule.isValid(queue) {
+			results = append(results, rule)
+		}
+	}
+	return results
+}
+
+func repairFaultyUpdates(queues [][]int, rules []rule) [][]int {
+	for _, queue := range queues {
+		timeoutSecs := 5
+		timeout := time.Now().Add(time.Second * time.Duration(timeoutSecs))
+
+		for {
+			assert.Assert(time.Now().Before(timeout), "repair took longer than %d seconds", timeoutSecs)
+
+			rules := findInvalidRules(queue, rules)
+			if len(rules) == 0 {
+				break
+			}
+
+			
+		}
+	}
+
+	return queues
+}
+
 // ExecutePart1 implements structure.Challenge.
 func (d day5) ExecutePart1() {
     input, err := io.ReadStr("internal/advents/a5/input.txt")
@@ -171,7 +223,15 @@ func (d day5) ExecutePart1() {
 
 // ExecutePart2 implements structure.Challenge.
 func (d day5) ExecutePart2() {
-	fmt.Println("unimplemented")
+    input, err := io.ReadStr("internal/advents/a5/input.txt")
+    if err != nil {
+        panic(err)
+    }
+
+    invalidQueues, err := getCorrectlyOrderedUpdates(input)
+    if err != nil {
+        panic(err)
+    }
 }
 
 var _ structure.Challenge = day5{}
