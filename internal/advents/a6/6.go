@@ -59,7 +59,11 @@ type tile struct {
 type pos struct {
 	x   int
 	y   int
-	dir direction
+}
+
+type guard struct {
+    pos pos
+    dir direction
 }
 
 func parseTile(r rune) tileType {
@@ -98,8 +102,8 @@ func parseDir(r rune) direction {
 	}
 }
 
-func parseMap(input string) ([][]tile, pos) {
-	var guardPos pos
+func parseMap(input string) ([][]tile, guard) {
+	var guard guard
 	patrolMap := [][]tile{}
 	lines := strings.Split(input, "\n")
 
@@ -112,9 +116,9 @@ func parseMap(input string) ([][]tile, pos) {
 
             switch tType {
             case GUARD:
-				guardPos.x = j
-				guardPos.y = i
-				guardPos.dir = parseDir(r)
+				guard.pos.x = j
+				guard.pos.y = i
+				guard.dir = parseDir(r)
 				tType = GROUND
             case OBSTRUCTION:
                 isObstructed = true
@@ -128,52 +132,56 @@ func parseMap(input string) ([][]tile, pos) {
 		}
 	}
 
-	return patrolMap, guardPos
+	return patrolMap, guard
 }
 
 func isWithinBounds(patrolMap [][]tile, position pos) bool {
 	yBound := len(patrolMap)
 	xBound := len(patrolMap[yBound-1])
-	return position.x > 0 && position.y > 0 && position.x < xBound && position.y < yBound
+	return position.x >= 0 && position.y >= 0 && position.x < xBound && position.y < yBound
 }
 
-func traverse(patrolMap [][]tile, startPosition pos) int {
+func traverse(patrolMap [][]tile, guard guard) int {
     var distinctTiles map[pos]struct{} = map[pos]struct{}{}
-	var currentPos pos = startPosition
 
 	timeLimitSec := 5
 	abortTime := time.Now().Add(time.Second * time.Duration(timeLimitSec))
 	for {
-        slog.Debug("pos", "x", currentPos.x, "y", currentPos.y)
-
 		assert.Assert(time.Now().Before(abortTime), "traversal must take less than %v seconds to complete", timeLimitSec)
-		if !isWithinBounds(patrolMap, currentPos) {
-			break
-		}
 
-		deltaX, deltaY := currentPos.dir.Delta()
-        nextTile := patrolMap[currentPos.y+deltaY][currentPos.x+deltaX]
+        slog.Debug("saving pos", "x", guard.pos.x, "y", guard.pos.y)
+        distinctTiles[guard.pos] = struct{}{}
+
+		deltaX, deltaY := guard.dir.Delta()
+        nextPos := pos{
+            x: guard.pos.x + deltaX,
+            y: guard.pos.y + deltaY,
+        }
+        if !isWithinBounds(patrolMap, nextPos) {
+            break
+        }
+
+        nextTile := patrolMap[nextPos.y][nextPos.x]
 		if nextTile.IsObstructed {
-			switch currentPos.dir {
+			switch guard.dir {
 			case DIR_N:
-				currentPos.dir = DIR_E
+				guard.dir = DIR_E
 			case DIR_E:
-				currentPos.dir = DIR_S
+				guard.dir = DIR_S
 			case DIR_S:
-				currentPos.dir = DIR_W
+				guard.dir = DIR_W
 			case DIR_W:
-				currentPos.dir = DIR_N
+				guard.dir = DIR_N
             default:
-                panic("Unknown position " + strconv.QuoteRune(rune(currentPos.dir)))
+                panic("Unknown position " + strconv.QuoteRune(rune(guard.dir)))
 			}
 			continue
 		}
 
-        distinctTiles[currentPos] = struct{}{}
-
-        deltaX, deltaY = currentPos.dir.Delta()
-        currentPos.x = currentPos.x+deltaX
-        currentPos.y = currentPos.y+deltaY
+        // Calculate delta with new position
+        deltaX, deltaY = guard.dir.Delta()
+        guard.pos.x = guard.pos.x+deltaX
+        guard.pos.y = guard.pos.y+deltaY
 	}
 
 	return len(distinctTiles)
