@@ -6,6 +6,7 @@ import (
 	"dekamik/aoc_2024/internal/structure"
 	"fmt"
 	"math"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -154,23 +155,24 @@ func getCorrectlyOrderedUpdates(input string) ([][]int, error) {
     return validUpdates, nil
 }
 
-func getIncorrectlyOrderedUpdates(input string) ([][]int, error) {
+func getIncorrectlyOrderedUpdates(input string) ([][]int, []rule, error) {
 	invalidUpdates := [][]int{}
 
     rules, queues, err := parseFile(input)
     if err != nil {
-        return nil, err
+        return nil, nil, err
     }
 
 	for _, queue := range queues {
 		for _, rule := range rules {
 			if !rule.isValid(queue) {
 				invalidUpdates = append(invalidUpdates, queue)
+				break
 			}
 		}
 	}
 
-	return invalidUpdates, nil
+	return invalidUpdates, rules, nil
 }
 
 func findInvalidRules(queue []int, rules []rule) []rule {
@@ -181,23 +183,48 @@ func findInvalidRules(queue []int, rules []rule) []rule {
 			results = append(results, rule)
 		}
 	}
+
 	return results
 }
 
 func repairFaultyUpdates(queues [][]int, rules []rule) [][]int {
-	for _, queue := range queues {
+	for i := range queues {
 		timeoutSecs := 5
 		timeout := time.Now().Add(time.Second * time.Duration(timeoutSecs))
 
 		for {
-			assert.Assert(time.Now().Before(timeout), "repair took longer than %d seconds", timeoutSecs)
+			assert.Assert(time.Now().Before(timeout), "repair cannot take longer than %d seconds", timeoutSecs)
 
-			rules := findInvalidRules(queue, rules)
+			rules := findInvalidRules(queues[i], rules)
 			if len(rules) == 0 {
 				break
 			}
 
-			
+			// This doesn't work, should probably go for a tree
+			for _, rule := range rules {
+				var beforeIndex int = -1
+				var afterIndex int = -1
+
+				for j, num := range queues[i] {
+					if num == rule.before {
+						beforeIndex = j
+					} else if num == rule.after {
+						afterIndex = j
+					}
+
+					if beforeIndex != -1 && afterIndex != -1 {
+						break
+					}
+				}
+
+				if beforeIndex == -1 || afterIndex == -1 {
+					continue
+				}
+
+				num := queues[i][beforeIndex]
+				queues[i] = slices.Delete(queues[i], beforeIndex, beforeIndex+1)
+				queues[i] = slices.Insert(queues[i], afterIndex, num)
+			}
 		}
 	}
 
@@ -217,7 +244,6 @@ func (d day5) ExecutePart1() {
     }
 
     sum := sumMiddleNumber(validQueues)
-
     fmt.Println(sum)
 }
 
@@ -228,10 +254,15 @@ func (d day5) ExecutePart2() {
         panic(err)
     }
 
-    invalidQueues, err := getCorrectlyOrderedUpdates(input)
+    invalidQueues, rules, err := getIncorrectlyOrderedUpdates(input)
     if err != nil {
         panic(err)
     }
+
+	repairedQueues := repairFaultyUpdates(invalidQueues, rules)
+
+	sum := sumMiddleNumber(repairedQueues)
+	fmt.Println(sum)
 }
 
 var _ structure.Challenge = day5{}
