@@ -7,9 +7,9 @@ import (
 )
 
 func TestCalculateDistinctTiles(t *testing.T) {
-    logging.NewDefault(slog.LevelDebug)
+	logging.NewDefault(slog.LevelDebug)
 
-    input := `....#.....
+	input := `....#.....
 .........#
 ..........
 ..#.......
@@ -20,21 +20,21 @@ func TestCalculateDistinctTiles(t *testing.T) {
 #.........
 ......#...`
 
-    expected := 41
-    actual, err := calculateDistinctTiles(input)
-    if err != nil {
-        panic(err)
-    }
+	expected := 41
+	actual, err := calculateDistinctTiles(input)
+	if err != nil {
+		panic(err)
+	}
 
-    if actual != expected {
-        t.Errorf("Expected %v, but got %v", expected, actual)
-    }
+	if actual != expected {
+		t.Errorf("Expected %v, but got %v", expected, actual)
+	}
 }
 
 func TestCalculateInfiniteLoops(t *testing.T) {
-    logging.NewDefault(slog.LevelInfo)
+	logging.NewDefault(slog.LevelInfo)
 
-    input := `....#.....
+	input := `....#.....
 .........#
 ..........
 ..#.......
@@ -45,13 +45,13 @@ func TestCalculateInfiniteLoops(t *testing.T) {
 #.........
 ......#...`
 
-    expected := 6
-    actual, err := calculateInfiniteLoops(input)
-    if err != nil {
-        panic(err)
-    }
+	expected := 6
+	actual, err := calculateInfiniteLoops(input)
+	if err != nil {
+		panic(err)
+	}
 
-    if actual != expected {
-        t.Errorf("Expected %v, but got %v", expected, actual)
-    }
+	if actual != expected {
+		t.Errorf("Expected %v, but got %v", expected, actual)
+	}
 }

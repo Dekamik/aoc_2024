@@ -18,5 +18,5 @@ func (d day7) ExecutePart2() {
 var _ structure.Challenge = day7{}
 
 func New() structure.Challenge {
-    return day7{}
+	return day7{}
 }

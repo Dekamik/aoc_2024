@@ -1,8 +1,8 @@
 package a3
 
 import (
-	"dekamik/aoc_2024/internal/structure"
 	"dekamik/aoc_2024/internal/io"
+	"dekamik/aoc_2024/internal/structure"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -150,9 +150,9 @@ func (c challenge) ExecutePart2() {
 	}
 
 	instructions, err := tokenize(str)
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
 	result := execute(instructions)
 

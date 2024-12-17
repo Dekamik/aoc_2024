@@ -42,8 +42,8 @@ func (d direction) Delta() (int, int) {
 }
 
 func (d direction) String() string {
-    s := strconv.Itoa(int(d))
-    return s
+	s := strconv.Itoa(int(d))
+	return s
 }
 
 type tileType int
@@ -60,17 +60,17 @@ type tile struct {
 }
 
 type pos struct {
-	x   int
-	y   int
+	x int
+	y int
 }
 
 func (p pos) String() string {
-    return fmt.Sprintf("%d,%d", p.x, p.y)
+	return fmt.Sprintf("%d,%d", p.x, p.y)
 }
 
 type guard struct {
-    pos pos
-    dir direction
+	pos pos
+	dir direction
 }
 
 func parseTile(r rune) tileType {
@@ -119,21 +119,21 @@ func parseMap(input string) ([][]tile, guard) {
 
 		for j, r := range line {
 			tType := parseTile(r)
-            isObstructed := false
+			isObstructed := false
 
-            switch tType {
-            case GUARD:
+			switch tType {
+			case GUARD:
 				guard.pos.x = j
 				guard.pos.y = i
 				guard.dir = parseDir(r)
 				tType = GROUND
-            case OBSTRUCTION:
-                isObstructed = true
-            }
+			case OBSTRUCTION:
+				isObstructed = true
+			}
 
 			t := tile{
-				Type: tType,
-                IsObstructed: isObstructed,
+				Type:         tType,
+				IsObstructed: isObstructed,
 			}
 			patrolMap[i] = append(patrolMap[i], t)
 		}
@@ -145,56 +145,56 @@ func parseMap(input string) ([][]tile, guard) {
 func getBounds(patrolMap [][]tile) (int, int, int, int) {
 	yBound := len(patrolMap)
 	xBound := len(patrolMap[yBound-1])
-    return -1, -1, xBound, yBound
+	return -1, -1, xBound, yBound
 }
 
 func isWithinBounds(patrolMap [][]tile, position pos) bool {
-    xMin, yMin, xMax, yMax := getBounds(patrolMap)
+	xMin, yMin, xMax, yMax := getBounds(patrolMap)
 	return position.x > xMin && position.y > yMin && position.x < xMax && position.y < yMax
 }
 
 func traverse(patrolMap [][]tile, guard guard) (int, error) {
-    var currentCollisions int = 0
-    var distinctTiles map[string]struct{} = map[string]struct{}{}
+	var currentCollisions int = 0
+	var distinctTiles map[string]struct{} = map[string]struct{}{}
 
-    xMin, yMin, xMax, yMax := getBounds(patrolMap)
-    slog.Debug("traversing map", "xMin", xMin, "yMin", yMin, "xMax", xMax, "yMax", yMax)
+	xMin, yMin, xMax, yMax := getBounds(patrolMap)
+	slog.Debug("traversing map", "xMin", xMin, "yMin", yMin, "xMax", xMax, "yMax", yMax)
 
 	timeLimitSec := 5
 	abortTime := time.Now().Add(time.Second * time.Duration(timeLimitSec))
 	for {
-        if time.Now().After(abortTime) {
-            return -1, timeoutError
-        }
+		if time.Now().After(abortTime) {
+			return -1, timeoutError
+		}
 
-        // A better way to detect infinite loops is to count turns - if the last
-        // 4 turns have the same coordinates, we are in an infinite loop.
-        // This works "okay" for our purposes, although it's very bruteforce and
-        // unelegant.
-        if _, exists := distinctTiles[guard.pos.String()]; exists {
-            currentCollisions++
+		// A better way to detect infinite loops is to count turns - if the last
+		// 4 turns have the same coordinates, we are in an infinite loop.
+		// This works "okay" for our purposes, although it's very bruteforce and
+		// unelegant.
+		if _, exists := distinctTiles[guard.pos.String()]; exists {
+			currentCollisions++
 
-            // High number for accuracy
-            if currentCollisions > 1000 {
-                return -1, infiniteLoopError
-            }
-        } else {
-            currentCollisions = 0
-        }
+			// High number for accuracy
+			if currentCollisions > 1000 {
+				return -1, infiniteLoopError
+			}
+		} else {
+			currentCollisions = 0
+		}
 
-        slog.Debug("saving pos", "x", guard.pos.x, "y", guard.pos.y)
-        distinctTiles[guard.pos.String()] = struct{}{}
+		slog.Debug("saving pos", "x", guard.pos.x, "y", guard.pos.y)
+		distinctTiles[guard.pos.String()] = struct{}{}
 
 		deltaX, deltaY := guard.dir.Delta()
-        nextPos := pos{
-            x: guard.pos.x + deltaX,
-            y: guard.pos.y + deltaY,
-        }
-        if !isWithinBounds(patrolMap, nextPos) {
-            break
-        }
+		nextPos := pos{
+			x: guard.pos.x + deltaX,
+			y: guard.pos.y + deltaY,
+		}
+		if !isWithinBounds(patrolMap, nextPos) {
+			break
+		}
 
-        nextTile := patrolMap[nextPos.y][nextPos.x]
+		nextTile := patrolMap[nextPos.y][nextPos.x]
 		if nextTile.IsObstructed {
 			switch guard.dir {
 			case DIR_N:
@@ -205,16 +205,16 @@ func traverse(patrolMap [][]tile, guard guard) (int, error) {
 				guard.dir = DIR_W
 			case DIR_W:
 				guard.dir = DIR_N
-            default:
-                panic("Unknown position " + strconv.QuoteRune(rune(guard.dir)))
+			default:
+				panic("Unknown position " + strconv.QuoteRune(rune(guard.dir)))
 			}
 			continue
 		}
 
-        // Calculate delta with final direction
-        deltaX, deltaY = guard.dir.Delta()
-        guard.pos.x = guard.pos.x+deltaX
-        guard.pos.y = guard.pos.y+deltaY
+		// Calculate delta with final direction
+		deltaX, deltaY = guard.dir.Delta()
+		guard.pos.x = guard.pos.x + deltaX
+		guard.pos.y = guard.pos.y + deltaY
 	}
 
 	return len(distinctTiles), nil
@@ -223,42 +223,42 @@ func traverse(patrolMap [][]tile, guard guard) (int, error) {
 func calculateDistinctTiles(input string) (int, error) {
 	patrolMap, guard := parseMap(input)
 	tiles, err := traverse(patrolMap, guard)
-    if err != nil {
-        return -1, err
-    }
+	if err != nil {
+		return -1, err
+	}
 
 	return tiles, nil
 }
 
 func calculateInfiniteLoops(input string) (int, error) {
-    var possibleObstructions int = 0
+	var possibleObstructions int = 0
 
 	patrolMap, guard := parseMap(input)
-    startPosition := guard.pos
+	startPosition := guard.pos
 
-    for i, row := range patrolMap {
-        for j, tile := range row {
-            if tile.IsObstructed || (j == startPosition.x && i == startPosition.y) {
-                continue
-            }
+	for i, row := range patrolMap {
+		for j, tile := range row {
+			if tile.IsObstructed || (j == startPosition.x && i == startPosition.y) {
+				continue
+			}
 
-            patrolMap[i][j].IsObstructed = true
+			patrolMap[i][j].IsObstructed = true
 
-            _, err := traverse(patrolMap, guard)
-            if err != nil {
-                if err == infiniteLoopError {
-                    slog.Info("found obstruction", "x", j, "y", i)
-                    possibleObstructions++
-                } else {
-                    return -1, err
-                }
-            }
+			_, err := traverse(patrolMap, guard)
+			if err != nil {
+				if err == infiniteLoopError {
+					slog.Info("found obstruction", "x", j, "y", i)
+					possibleObstructions++
+				} else {
+					return -1, err
+				}
+			}
 
-            patrolMap[i][j].IsObstructed = false
-        }
-    }
+			patrolMap[i][j].IsObstructed = false
+		}
+	}
 
-    return possibleObstructions, nil
+	return possibleObstructions, nil
 }
 
 // ExecutePart1 implements structure.Challenge.
@@ -268,12 +268,12 @@ func (d day6) ExecutePart1() {
 		panic(err)
 	}
 
-    // Remove last newline
-    input = input[:len(input)-1]
-    tiles, err := calculateDistinctTiles(input)
-    if err != nil {
-        panic(err)
-    }
+	// Remove last newline
+	input = input[:len(input)-1]
+	tiles, err := calculateDistinctTiles(input)
+	if err != nil {
+		panic(err)
+	}
 
 	fmt.Println(tiles)
 }
@@ -285,12 +285,12 @@ func (d day6) ExecutePart2() {
 		panic(err)
 	}
 
-    // Remove last newline
-    input = input[:len(input)-1]
-    obstructions, err := calculateInfiniteLoops(input)
-    if err != nil {
-        panic(err)
-    }
+	// Remove last newline
+	input = input[:len(input)-1]
+	obstructions, err := calculateInfiniteLoops(input)
+	if err != nil {
+		panic(err)
+	}
 
 	fmt.Println(obstructions)
 }

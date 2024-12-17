@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-    logging.NewDefault(slog.LevelInfo)
+	logging.NewDefault(slog.LevelInfo)
 
 	command := a5.New()
 	command.ExecutePart1()

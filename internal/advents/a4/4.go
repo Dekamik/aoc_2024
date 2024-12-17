@@ -2,8 +2,8 @@ package a4
 
 import (
 	"dekamik/aoc_2024/internal/assert"
-	"dekamik/aoc_2024/internal/structure"
 	"dekamik/aoc_2024/internal/io"
+	"dekamik/aoc_2024/internal/structure"
 	"fmt"
 	"log/slog"
 	"strings"

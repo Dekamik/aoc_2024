@@ -14,12 +14,12 @@ SAXAMASAAA
 MAMMMXMMMM
 MXMXAXMASX`
 
-    expected := 18
-    actual := countWord(input, "XMAS")
+	expected := 18
+	actual := countWord(input, "XMAS")
 
-    if actual != expected {
+	if actual != expected {
 		t.Errorf("Actual %v not equal to expected %v", actual, expected)
-    }
+	}
 }
 
 func TestCountXMas(t *testing.T) {
@@ -34,10 +34,10 @@ SAXAMASAAA
 MAMMMXMMMM
 MXMXAXMASX`
 
-    expected := 9
-    actual := countXMas(input)
+	expected := 9
+	actual := countXMas(input)
 
-    if actual != expected {
+	if actual != expected {
 		t.Errorf("Actual %v not equal to expected %v", actual, expected)
-    }
+	}
 }

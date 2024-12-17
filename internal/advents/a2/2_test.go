@@ -6,12 +6,10 @@ type day2test struct {
 	pass bool
 }
 
-var tests = []day2test {
-
-}
+var tests = []day2test{}
 
 //func TestDay2(t *testing.T) {
 //    for _, test := range tests {
-//        
+//
 //    }
 //}

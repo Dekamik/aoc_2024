@@ -17,7 +17,7 @@ type day5 struct {
 
 type rule struct {
 	before int
-	after int
+	after  int
 }
 
 func (r rule) isValid(queue []int) bool {
@@ -32,7 +32,7 @@ func (r rule) isValid(queue []int) bool {
 				}
 			}
 		} else if current == r.after {
-			for j := i+1; j < len(queue); j++ {
+			for j := i + 1; j < len(queue); j++ {
 				if queue[j] == r.before {
 					isValid = false
 					break
@@ -63,105 +63,105 @@ func parseRule(s string) (*rule, error) {
 
 	return &rule{
 		before: before,
-		after: after,
+		after:  after,
 	}, nil
 }
 
 func parseQueue(s string) ([]int, error) {
-    results := []int{}
-    rawLine := strings.Split(s, ",")
+	results := []int{}
+	rawLine := strings.Split(s, ",")
 
-    for _, raw := range rawLine {
-        num, err := strconv.Atoi(raw)
-        if err != nil {
-            return nil, err
-        }
+	for _, raw := range rawLine {
+		num, err := strconv.Atoi(raw)
+		if err != nil {
+			return nil, err
+		}
 
-        results = append(results, num)
-    }
+		results = append(results, num)
+	}
 
-    return results, nil
+	return results, nil
 }
 
 func parseFile(input string) ([]rule, [][]int, error) {
-    var isOnQueues bool = false
-    var rules []rule = []rule{}
-    var queues [][]int = [][]int{}
+	var isOnQueues bool = false
+	var rules []rule = []rule{}
+	var queues [][]int = [][]int{}
 
-    lines := strings.Split(input, "\n")
+	lines := strings.Split(input, "\n")
 
-    for _, line := range lines {
-        if isOnQueues {
-            if line == "" {
-                break
-            }
+	for _, line := range lines {
+		if isOnQueues {
+			if line == "" {
+				break
+			}
 
-            queue, err := parseQueue(line)
-            if err != nil {
-                return nil, nil, err
-            }
-            queues = append(queues, queue)
+			queue, err := parseQueue(line)
+			if err != nil {
+				return nil, nil, err
+			}
+			queues = append(queues, queue)
 
-        } else {
-            if line == "" {
-                isOnQueues = true
-                continue
-            }
+		} else {
+			if line == "" {
+				isOnQueues = true
+				continue
+			}
 
-            rule, err := parseRule(line)
-            if err != nil {
-                return nil, nil, err
-            }
-            rules = append(rules, *rule)
-        }
-    }
+			rule, err := parseRule(line)
+			if err != nil {
+				return nil, nil, err
+			}
+			rules = append(rules, *rule)
+		}
+	}
 
-    return rules, queues, nil
+	return rules, queues, nil
 }
 
 func sumMiddleNumber(input [][]int) int {
-    var sum int = 0
+	var sum int = 0
 
-    for _, row := range input {
-        midIndex := int(math.Floor(float64(len(row)) * 0.5))
-        sum += row[midIndex]
-    }
+	for _, row := range input {
+		midIndex := int(math.Floor(float64(len(row)) * 0.5))
+		sum += row[midIndex]
+	}
 
-    return sum
+	return sum
 }
 
 func getCorrectlyOrderedUpdates(input string) ([][]int, error) {
-    validUpdates := [][]int{}
+	validUpdates := [][]int{}
 
-    rules, queues, err := parseFile(input)
-    if err != nil {
-        return nil, err
-    }
+	rules, queues, err := parseFile(input)
+	if err != nil {
+		return nil, err
+	}
 
-    for _, queue := range queues {
-        var invalidRules int = 0
+	for _, queue := range queues {
+		var invalidRules int = 0
 
-        for _, rule := range rules {
-            if !rule.isValid(queue) {
-                invalidRules++
-            }
-        }
+		for _, rule := range rules {
+			if !rule.isValid(queue) {
+				invalidRules++
+			}
+		}
 
-        if invalidRules == 0 {
-            validUpdates = append(validUpdates, queue)
-        }
-    }
+		if invalidRules == 0 {
+			validUpdates = append(validUpdates, queue)
+		}
+	}
 
-    return validUpdates, nil
+	return validUpdates, nil
 }
 
 func getIncorrectlyOrderedUpdates(input string) ([][]int, []rule, error) {
 	invalidUpdates := [][]int{}
 
-    rules, queues, err := parseFile(input)
-    if err != nil {
-        return nil, nil, err
-    }
+	rules, queues, err := parseFile(input)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	for _, queue := range queues {
 		for _, rule := range rules {
@@ -233,31 +233,31 @@ func repairFaultyUpdates(queues [][]int, rules []rule) [][]int {
 
 // ExecutePart1 implements structure.Challenge.
 func (d day5) ExecutePart1() {
-    input, err := io.ReadStr("internal/advents/a5/input.txt")
-    if err != nil {
-        panic(err)
-    }
+	input, err := io.ReadStr("internal/advents/a5/input.txt")
+	if err != nil {
+		panic(err)
+	}
 
-    validQueues, err := getCorrectlyOrderedUpdates(input)
-    if err != nil {
-        panic(err)
-    }
+	validQueues, err := getCorrectlyOrderedUpdates(input)
+	if err != nil {
+		panic(err)
+	}
 
-    sum := sumMiddleNumber(validQueues)
-    fmt.Println(sum)
+	sum := sumMiddleNumber(validQueues)
+	fmt.Println(sum)
 }
 
 // ExecutePart2 implements structure.Challenge.
 func (d day5) ExecutePart2() {
-    input, err := io.ReadStr("internal/advents/a5/input.txt")
-    if err != nil {
-        panic(err)
-    }
+	input, err := io.ReadStr("internal/advents/a5/input.txt")
+	if err != nil {
+		panic(err)
+	}
 
-    invalidQueues, rules, err := getIncorrectlyOrderedUpdates(input)
-    if err != nil {
-        panic(err)
-    }
+	invalidQueues, rules, err := getIncorrectlyOrderedUpdates(input)
+	if err != nil {
+		panic(err)
+	}
 
 	repairedQueues := repairFaultyUpdates(invalidQueues, rules)
 
@@ -268,5 +268,5 @@ func (d day5) ExecutePart2() {
 var _ structure.Challenge = day5{}
 
 func New() structure.Challenge {
-    return day5{}
+	return day5{}
 }

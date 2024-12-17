@@ -6,21 +6,21 @@ import (
 )
 
 func ReadStr(path string) (string, error) {
-    buffer, err := os.ReadFile(path)
+	buffer, err := os.ReadFile(path)
 	if err != nil {
-        return "", err
+		return "", err
 	}
 
-    return string(buffer), nil
+	return string(buffer), nil
 }
 
 func ReadLines(path string) ([]string, error) {
 	buffer, err := os.ReadFile(path)
 	if err != nil {
-        return nil, err
+		return nil, err
 	}
 
 	lines := strings.Split(string(buffer), "\n")
 
-    return lines, nil
+	return lines, nil
 }
